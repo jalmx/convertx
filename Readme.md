@@ -15,3 +15,4 @@ pip install pdf2image
 
 - create a `cli`
 - get `args` to file o path, format
+- add to pypi
