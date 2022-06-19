@@ -10,9 +10,16 @@ Supported values are `ppm`, `jpeg`, `png` and `tiff`.
 pip install pdf2image
 ```
 
-
 ## Todo
 
-- create a `cli`
 - get `args` to file o path, format
-- add to pypi
+- add to `pypi`
+- fix: fix the error with folder
+
+## Change permission
+
+
+
+```bash
+sudo chmod +x ./bin/convertx
+```

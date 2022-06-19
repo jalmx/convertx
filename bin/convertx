@@ -1,0 +1,21 @@
+#!/usr/bin/python3
+from os import listdir,path
+from pdf2image import convert_from_path
+from sys import argv,exit
+import os
+HELP='\nFOR THE MOMENTO JUST CONVERT TO PNG, A FILE OR FOLDER\nConvert a pdf to img o you can give a folder to convert all pdf to img\n\n-d [PATH FOLDER] get all files pdf to convert in image\n-f [FORMAT TO CONVERT OUTPUT] `ppm`, `jpeg`, `png` and `tiff`. Default: png\n-o [FILE NAME OUTPUT]. Default: Where to exec command\n\nExample:\n\nconvert my_file.pdf # automatic to convert here with the same name in png, output file will be my_file.png\nconvert my_file.pdf -f tiff -o img # output file will be img.tiff\nconvert my_file.pdf -f jpeg # output file will be my_file.jpeg\n'
+def convert_file(file,format_file='png'):
+	C=format_file;A=file
+	if A.endswith('.pdf'):D=A.replace('pdf',C);B=convert_from_path(A);B=B[0];print(f"======== Converting {A} to png ==========");B.save(D,C.upper());print(f"========== Done ==========")
+def convert_folder(folder='',format_file='png'):
+	A=listdir(folder)
+	for B in A:convert_file(B,format_file=format_file)
+def main():
+	print(argv)
+	if len(argv)<2:print(HELP);exit(1)
+	A=argv[1];print(A)
+	if path.isdir(A):convert_folder(path.abspath(A))
+	else:
+		if not A.endswith('.pdf'):print(HELP);exit(1)
+		convert_file(A)
+if __name__=='__main__':main()
