@@ -6,13 +6,13 @@ Supported values are `ppm`, `jpeg`, `png` and `tiff`.
 
 ## Requirements
 
-For release 
+For release
 
 ```bash
 pip install pdf2image
 ```
 
-For build install 
+For build install
 
 ```bash
 pip install python-minifier
@@ -27,7 +27,7 @@ sudo chmod +x ./build.sh # is necessary
 
 ## Change permission
 
-change permissions and move to `.local/bin/` or in your PATH 
+change permissions and move to `.local/bin/` or in your PATH
 
 ```bash
 sudo chmod +x ./bin/convertx
@@ -38,5 +38,5 @@ mv bin/convertx $HOME/.local/bin/
 
 - add to `pypi`
 - fix: fix the error with folder
-- Add to change save directory 
+- Add to change save directory
 - Read all files from route and colocate in new path

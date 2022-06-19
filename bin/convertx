@@ -2,9 +2,9 @@
 '\nSimple convert pdf to image\n'
 _A='png'
 from os import listdir,path
-from pdf2image import convert_from_path
-from sys import argv,exit
 from pathlib import Path
+from sys import argv,exit
+from pdf2image import convert_from_path
 HELP='\nFOR THE MOMENTO JUST CONVERT TO PNG, A FILE OR FOLDER\nConvert a pdf to img o you can give a folder to convert all pdf to img\n\n-f [FORMAT TO CONVERT OUTPUT] `ppm`, `jpeg`, `png` and `tiff`. Default: png\n-o [FILE NAME OUTPUT]. Default: Where to exec command\n\nExample:\n\nconvert my_file.pdf # automatic to convert here with the same name in png, output file will be my_file.png\nconvert my_file.pdf -f tiff -o new_image # output file will be `image.tiff`\nconvert my_file.pdf -f jpeg # output file will be my_file.jpeg\nconvert /home/user/files # take a folder to convert all files to image\nconvert /home/user/files -f jpeg # take a folder to convert all files to image in jpeg\n'
 def get_name_file(path_file,new_name):
 	B=new_name;A=path_file
@@ -30,4 +30,5 @@ def main():
 	else:
 		if not A.endswith('.pdf'):print(HELP);exit(1)
 		convert_file(A,format_file=B,new_name=C)
+	exit(0)
 if __name__=='__main__':main()

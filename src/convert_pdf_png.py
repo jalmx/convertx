@@ -4,9 +4,10 @@ Simple convert pdf to image
 """
 
 from os import listdir, path
-from pdf2image import convert_from_path
-from sys import argv, exit
 from pathlib import Path
+from sys import argv, exit
+
+from pdf2image import convert_from_path
 
 HELP = """
 FOR THE MOMENTO JUST CONVERT TO PNG, A FILE OR FOLDER
@@ -44,7 +45,7 @@ def convert_file(file, format_file="png", new_name="") -> None:
     if file.endswith(".pdf"):
         name = file.replace("pdf", format_file.replace(".", ""))
         img = convert_from_path(file)
-        img = img[0] # here can add to convert all pages, a just want the first
+        img = img[0]  # here can add to convert all pages, a just want the first
         name = get_name_file(name, new_name)
 
         print(f"======== Converting {file} to {format_file} ==========")
@@ -63,6 +64,7 @@ def convert_folder(folder="", format_file="png") -> None:
     directories = listdir(folder)
     for file in directories:
         convert_file(file, format_file=format_file)
+
 
 def parse_args(args) -> dict:
     """
@@ -105,6 +107,7 @@ def main() -> None:
             print(HELP)
             exit(1)
         convert_file(file_name, format_file=format_file, new_name=output_name)
+    exit(0)
 
 
 if __name__ == "__main__":
