@@ -1,18 +1,29 @@
 #!/usr/bin/python3
 '\nSimple convert pdf to image\n'
+_C='pdf2image'
+_B='install'
 _A='png'
 from os import listdir,path
 from pathlib import Path
 from sys import argv,exit
-from pdf2image import convert_from_path
-HELP='\nFOR THE MOMENTO JUST CONVERT TO PNG, A FILE OR FOLDER\nConvert a pdf to img o you can give a folder to convert all pdf to img\n\n-f [FORMAT TO CONVERT OUTPUT] `ppm`, `jpeg`, `png` and `tiff`. Default: png\n-o [FILE NAME OUTPUT]. Default: Where to exec command\n\nExample:\n\nconvert my_file.pdf # automatic to convert here with the same name in png, output file will be my_file.png\nconvert my_file.pdf -f tiff -o new_image # output file will be `image.tiff`\nconvert my_file.pdf -f jpeg # output file will be my_file.jpeg\nconvert /home/user/files # take a folder to convert all files to image\nconvert /home/user/files -f jpeg # take a folder to convert all files to image in jpeg\n'
-def get_name_file(path_file,new_name):
-	B=new_name;A=path_file
-	if not B:return Path(A)
-	C=A.split('/')[-1:][0].split('.')[0];return Path(A.replace(C,B))
+try:from pdf2image import convert_from_path
+except:
+	try:from pip._internal import main as pip;pip([_B,'--user',_C]);from pdf2image import convert_from_path
+	except:from pip._internal import main as pip;pip([_B,_C]);from pdf2image import convert_from_path
+HELP='\nFOR THE MOMENTO JUST CONVERT TO PNG, A FILE OR FOLDER\nConvert a pdf to img o you can give a folder to convert all pdf to img\n\n-f [FORMAT TO CONVERT OUTPUT] `ppm`, `jpeg`, `png` and `tiff`. Default: png\n-o [FILE NAME OUTPUT]. Default: Where to exec command. Default: Take same name from file\n\nExample:\n\nconvert my_file.pdf # automatic to convert here with the same name in png, output file will be my_file.png\nconvert my_file.pdf -f tiff -o new_image # output file will be `new_image.tiff`\nconvert my_file.pdf -f jpeg # output file will be my_file.jpeg\nconvert /home/user/files # take a folder to convert all files pdf to image\nconvert /home/user/files -f jpeg # take a folder to convert all files to image in jpeg\n\nDevelopment by Josef Leyva (Xizuth) \n'
+def get_name_file(name,new_name='',count=0,format_file=_A):
+	D=new_name;C=format_file;B=name;A=count
+	if A:A=f"_{A}"
+	else:A=''
+	if not D:return B.replace(f".{C}",f"{A}.{C}")
+	B=str(B).split('/')[-1:][0].split('.')[0];return Path(str(B).replace(B,f"{D}{A}.{C}"))
 def convert_file(file,format_file=_A,new_name=''):
-	'\n    Function to convert pdf to image\n    :param file: Name file pdf\n    :param format_file: format to converter\n    :param new_name: new name for the image\n    :return: None\n    ';C=format_file;A=file
-	if A.endswith('.pdf'):B=A.replace('pdf',C.replace('.',''));D=convert_from_path(A);D=D[0];B=get_name_file(B,new_name);print(f"======== Converting {A} to {C} ==========");print(f"Save to: {B}");D.save(B,C.upper().replace('.',''));print(f"========== Done ==========")
+	'\n    Function to convert pdf to image\n    :param file: Name file pdf\n    :param format_file: format to converter\n    :param new_name: new name for the image\n    :return: None\n    ';B=format_file;A=file
+	if A.endswith('.pdf'):
+		F=A.replace('pdf',B.replace('.',''));C=convert_from_path(A)
+		for (D,G) in enumerate(C):
+			if len(C)>1:D+=1
+			E=get_name_file(F,new_name=new_name,count=D,format_file=B);print(f"======== Converting {A} to {B} ==========");print(f"Save to: {E}");G.save(E,B.upper().replace('.',''));print(f"========== Done ==========")
 def convert_folder(folder='',format_file=_A):
 	'\n    Convert all files pdf to img\n    :param folder: name folder\n    :param format_file: format image\n    :return: None\n    ';A=listdir(folder)
 	for B in A:convert_file(B,format_file=format_file)

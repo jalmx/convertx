@@ -7,31 +7,50 @@ from os import listdir, path
 from pathlib import Path
 from sys import argv, exit
 
-from pdf2image import convert_from_path
+try:
+    from pdf2image import convert_from_path
+except:
+    try:
+        from pip._internal import main as pip
+        pip(['install', '--user', 'pdf2image'])
+        from pdf2image import convert_from_path
+    except:
+        from pip._internal import main as pip
+        pip(['install', 'pdf2image'])
+        from pdf2image import convert_from_path
 
 HELP = """
 FOR THE MOMENTO JUST CONVERT TO PNG, A FILE OR FOLDER
 Convert a pdf to img o you can give a folder to convert all pdf to img
 
 -f [FORMAT TO CONVERT OUTPUT] `ppm`, `jpeg`, `png` and `tiff`. Default: png
--o [FILE NAME OUTPUT]. Default: Where to exec command
+-o [FILE NAME OUTPUT]. Default: Where to exec command. Default: Take same name from file
 
 Example:
 
 convert my_file.pdf # automatic to convert here with the same name in png, output file will be my_file.png
-convert my_file.pdf -f tiff -o new_image # output file will be `image.tiff`
+convert my_file.pdf -f tiff -o new_image # output file will be `new_image.tiff`
 convert my_file.pdf -f jpeg # output file will be my_file.jpeg
-convert /home/user/files # take a folder to convert all files to image
+convert /home/user/files # take a folder to convert all files pdf to image
 convert /home/user/files -f jpeg # take a folder to convert all files to image in jpeg
+
+Development by Josef Leyva (Xizuth) 
 """
 
 
-def get_name_file(path_file, new_name) -> Path:
-    if not new_name:
-        return Path(path_file)
+def get_name_file(name, new_name='', count=0,format_file="png") -> Path:
 
-    name = path_file.split("/")[-1:][0].split(".")[0]
-    return Path(path_file.replace(name, new_name))
+    if count:
+        count = f'_{count}'
+    else:
+        count = ''
+    
+    if not new_name:        
+        return name.replace(f'.{format_file}', f'{count}.{format_file}')
+        
+
+    name = str(name).split("/")[-1:][0].split(".")[0]
+    return Path(str(name).replace(name, f'{new_name}{count}.{format_file}'))
 
 
 def convert_file(file, format_file="png", new_name="") -> None:
@@ -45,13 +64,17 @@ def convert_file(file, format_file="png", new_name="") -> None:
     if file.endswith(".pdf"):
         name = file.replace("pdf", format_file.replace(".", ""))
         img = convert_from_path(file)
-        img = img[0]  # here can add to convert all pages, a just want the first
-        name = get_name_file(name, new_name)
+        
+        for i, page in enumerate(img):
+            if len(img) > 1:
+                i += 1
+        
+            name_final = get_name_file(name, new_name=new_name, count=i, format_file=format_file)
 
-        print(f"======== Converting {file} to {format_file} ==========")
-        print(f"Save to: {name}")
-        img.save(name, format_file.upper().replace(".", ""))
-        print(f"========== Done ==========")
+            print(f"======== Converting {file} to {format_file} ==========")
+            print(f"Save to: {name_final}")
+            page.save(name_final, format_file.upper().replace(".", ""))
+            print(f"========== Done ==========")
 
 
 def convert_folder(folder="", format_file="png") -> None:
