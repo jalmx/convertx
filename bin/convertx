@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 '\nSimple convert pdf to image\n'
 _C='pdf2image'
 _B='install'
